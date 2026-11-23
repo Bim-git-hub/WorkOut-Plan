@@ -2,7 +2,9 @@
   "name": "workout-tracker",
   "version": "1.0.0",
   "private": true,
-  "description": "Workout Tracker desktop app",
+  "description": "Workout Log — pelacak latihan desktop offline",
+  "author": "Bim-git-hub",
+  "homepage": "https://github.com/Bim-git-hub/WorkOut-Plan",
   "main": "out/main/main.js",
   "scripts": {
     "dev": "electron-vite dev",
@@ -21,6 +23,48 @@
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
     "vitest": "^2.1.4"
+  },
+  "build": {
+    "appId": "com.bimgithub.workoutlog",
+    "productName": "Workout Log",
+    "copyright": "Copyright © 2026 Bim-git-hub",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Workout Log",
+      "artifactName": "Workout-Log-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Workout-Log-${version}-portable.${ext}"
+    }
   },
   "type": "module"
 }
