@@ -3,7 +3,7 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=E4411B&height=230&section=header&text=WorkOut-Plan&fontSize=64&fontColor=ECE8DF&fontAlign=50&fontAlignY=38&desc=Catatan%20latihan%20yang%20offline%2C%20rapi%2C%20dan%20fokus%20ke%20progres&descSize=18&descAlignY=58&animation=fadeIn" width="100%" alt="WorkOut-Plan">
 
 <p align="center">
-  <img src="workout-tracker/build/icon.png" width="110" alt="Logo WorkOut-Plan">
+  <img src="https://api.iconify.design/lucide/calendar-x.svg?color=%23E4411B&width=110&height=110" width="110" height="110" alt="Logo WorkOut-Plan">
 </p>
 
 <p align="center">
