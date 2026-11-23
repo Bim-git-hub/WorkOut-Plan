@@ -1,68 +1,173 @@
-<p align="center">
-  <img src="workout-tracker/build/icon.png" width="112" alt="Workout Log">
+<div align="center">
+
+<img src="workout-tracker/build/icon.png" width="120" alt="Workout Log logo">
+
+# Workout Log
+
+**Pelacak latihan desktop yang offline, rapi, dan fokus ke progres.**
+
+[![Release](https://img.shields.io/github/v/release/Bim-git-hub/WorkOut-Plan?display_name=tag&style=for-the-badge&color=E4411B&label=Release)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest)
+[![Platform](https://img.shields.io/badge/Platform-Windows-161512?style=for-the-badge)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest)
+[![Mode](https://img.shields.io/badge/Mode-Offline%20%2F%20Lokal-ECE8DF?style=for-the-badge&labelColor=161512)](#-data--privasi)
+[![Electron](https://img.shields.io/badge/Electron-30-47848F?style=for-the-badge&logo=electron&logoColor=white)](https://www.electronjs.org/)
+
+<p>
+  <a href="https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest"><b>⬇ Unduh Aplikasi</b></a>
+  &nbsp;•&nbsp;
+  <a href="#-preview"><b>Preview</b></a>
+  &nbsp;•&nbsp;
+  <a href="#-fitur"><b>Fitur</b></a>
+  &nbsp;•&nbsp;
+  <a href="#-cara-pakai"><b>Cara Pakai</b></a>
+  &nbsp;•&nbsp;
+  <a href="#-pengembangan"><b>Pengembangan</b></a>
 </p>
 
-<h1 align="center">Workout Log</h1>
-
-<p align="center">
-  Pelacak latihan desktop yang <strong>sepenuhnya offline</strong>.<br>
-  Kalender, jadwal mingguan, catatan, dan riwayat — semua tersimpan lokal di perangkat Anda.
-</p>
-
-<p align="center">
-  <a href="https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest"><strong>Unduh versi terbaru</strong></a>
-</p>
+</div>
 
 ---
 
-## Fitur
+## ✨ Preview
 
-- **Dashboard** — streak, total workout, konsistensi bulan ini, grafik 7 hari, jadwal hari ini, dan riwayat terbaru.
-- **Kalender** — grid bulanan dengan judul sesi, tandai sesi selesai, dan buka lembar harian lewat popup.
-- **Jadwal** — atur template latihan per hari (Senin–Minggu) beserta judul sesi seperti *Upper Body*, *Lower Body*, atau *Cardio*.
-- **Riwayat** — daftar workout selesai per bulan, lengkap dengan catatan.
-- **Catatan** — simpan beban, rasa badan, atau rekor baru di setiap tanggal.
-- **Dua tema** — Kertas (terang) dan Tinta (gelap).
-- **Backup** — ekspor/impor JSON yang kompatibel dengan backup prototipe.
-- **Offline penuh** — tanpa CDN, tanpa telemetri, tanpa koneksi internet.
+<details open>
+<summary><b>Lihat tampilan aplikasi</b></summary>
+<br>
 
-## Unduh & Pasang
+| Dashboard | Kalender |
+| :---: | :---: |
+| <img src="workout-tracker/docs/screenshots/dashboard.png" alt="Dashboard Workout Log" width="100%"> | <img src="workout-tracker/docs/screenshots/calendar.png" alt="Kalender Workout Log" width="100%"> |
 
-Buka halaman [Releases](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest), lalu pilih salah satu:
+| Lembar Harian | Jadwal |
+| :---: | :---: |
+| <img src="workout-tracker/docs/screenshots/day-modal.png" alt="Popup lembar harian" width="100%"> | <img src="workout-tracker/docs/screenshots/schedule.png" alt="Jadwal mingguan" width="100%"> |
 
-| Berkas | Keterangan |
+<details>
+<summary><b>Tampilan lainnya</b></summary>
+<br>
+
+| Riwayat | Pengaturan |
+| :---: | :---: |
+| <img src="workout-tracker/docs/screenshots/history.png" alt="Riwayat workout" width="100%"> | <img src="workout-tracker/docs/screenshots/settings.png" alt="Pengaturan aplikasi" width="100%"> |
+
+</details>
+
+</details>
+
+## 🧭 Fitur
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 📊 Dashboard
+Ringkasan cepat progres latihan: streak, total workout, konsistensi bulan ini, aktivitas 7 hari, jadwal hari ini, dan riwayat terbaru.
+
+</td>
+<td width="50%" valign="top">
+
+### 📅 Kalender
+Grid bulanan dengan judul sesi per hari. Klik tanggal untuk membuka lembar harian, tandai selesai, atau tulis catatan.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🗓 Jadwal Mingguan
+Atur template latihan Senin–Minggu. Tambah latihan, set/reps, dan judul sesi seperti <i>Upper Body</i>, <i>Lower Body</i>, atau <i>Cardio</i>.
+
+</td>
+<td width="50%" valign="top">
+
+### 📝 Lembar Harian
+Popup harian untuk cek daftar latihan, menandai sesi selesai, menulis catatan beban/progres, dan mengedit jadwal hari tersebut.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🕘 Riwayat
+Lihat workout yang sudah selesai per bulan, lengkap dengan detail sesi dan catatan.
+
+</td>
+<td width="50%" valign="top">
+
+### 🎨 Tema Kertas & Tinta
+Dua tema editorial: **Kertas** (terang) dan **Tinta** (gelap). Ganti tema langsung dari topbar.
+
+</td>
+</tr>
+</table>
+
+## ⬇ Unduh
+
+<div align="center">
+
+[![Download Setup](https://img.shields.io/badge/Download-Installer_.exe-E4411B?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest/download/Workout-Log-Setup-1.0.0.exe)
+[![Download Portable](https://img.shields.io/badge/Download-Portable_.exe-161512?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest/download/Workout-Log-1.0.0-portable.exe)
+
+</div>
+
+| Berkas | Cocok untuk | Catatan |
+| --- | --- | --- |
+| `Workout-Log-Setup-1.0.0.exe` | Instalasi normal | Pilih folder instalasi, buat shortcut desktop/start menu |
+| `Workout-Log-1.0.0-portable.exe` | Pakai langsung | Tanpa instalasi, cocok dibawa di folder/drive |
+
+> [!NOTE]
+> Aplikasi belum ditandatangani digital. Jika Windows SmartScreen muncul, pilih **More info** lalu **Run anyway**.
+
+## 🚀 Cara Pakai
+
+<details open>
+<summary><b>Alur cepat</b></summary>
+<br>
+
+1. **Atur jadwal**  
+   Buka menu **Jadwal** → isi latihan tiap hari → beri judul sesi.
+2. **Buka kalender**  
+   Klik tanggal untuk membuka lembar harian.
+3. **Tandai selesai**  
+   Tekan **Tandai selesai** setelah latihan. Tambahkan catatan bila perlu.
+4. **Pantau progres**  
+   Cek **Dashboard** untuk streak/konsistensi, dan **Riwayat** untuk workout sebelumnya.
+5. **Cadangkan data**  
+   Buka **Pengaturan** → **Ekspor backup** secara berkala.
+
+</details>
+
+<details>
+<summary><b>Pintasan keyboard</b></summary>
+<br>
+
+| Tombol | Aksi |
 | --- | --- |
-| `Workout-Log-Setup-1.0.0.exe` | Installer (pilih folder instalasi, membuat shortcut) |
-| `Workout-Log-1.0.0-portable.exe` | Portable — jalankan langsung tanpa instalasi |
+| `←` / `→` | Ganti bulan di Kalender |
+| `Enter` / `Space` | Buka tanggal yang sedang difokuskan |
+| `Esc` | Tutup popup lembar harian |
 
-> Build belum ditandatangani secara digital. Jika Windows SmartScreen muncul, pilih **More info → Run anyway**.
+</details>
 
-## Cara Pakai
+## 🔒 Data & Privasi
 
-1. Buka menu **Jadwal**, isi latihan untuk tiap hari dan beri judul sesi.
-2. Buka **Kalender**, klik tanggal untuk membuka lembar harian.
-3. Di lembar harian: tandai **selesai**, tulis catatan, atau edit jadwal hari tersebut.
-4. Pantau progres di **Dashboard** dan tinjau workout lama di **Riwayat**.
-5. Gunakan tombol tema di kanan atas untuk beralih Kertas/Tinta.
+- **Offline penuh** — tidak ada CDN, telemetri, atau koneksi wajib.
+- **Data lokal** — tersimpan di perangkat Anda:
 
-Navigasi keyboard di kalender: `←` / `→` ganti bulan, `Esc` menutup popup.
-
-## Data & Backup
-
-Semua data disimpan sebagai JSON di:
-
-```
+```text
 %APPDATA%\workout-tracker\data.json
 ```
 
-- Penulisan atomik + file cadangan `data.bak.json`.
-- **Pengaturan → Ekspor backup** untuk menyimpan salinan JSON.
-- **Pengaturan → Impor backup** untuk memulihkan data.
-- Format backup sama dengan prototipe `workout-tracker.html`.
+- **Aman ditulis** — penyimpanan atomik dengan cadangan `data.bak.json`.
+- **Backup manual** — ekspor/impor JSON dari menu Pengaturan.
+- **Kompatibel** — format backup tetap kompatibel dengan prototipe `workout-tracker.html`.
 
-## Pengembangan
+## 🛠 Pengembangan
 
-Prasyarat: **Node.js 18+** dan Windows.
+<details>
+<summary><b>Jalankan dari source</b></summary>
+<br>
+
+**Prasyarat:** Node.js 18+, Windows.
 
 ```bash
 cd workout-tracker
@@ -74,32 +179,54 @@ npm run build    # build renderer/main/preload
 npm run dist     # buat installer + portable di folder release/
 ```
 
-## Struktur Proyek
+</details>
 
-```
+<details>
+<summary><b>Struktur proyek</b></summary>
+<br>
+
+```text
 workout-tracker/
-├── electron/          # main process + preload (IPC, penyimpanan atomik)
+├── electron/            # main process + preload (IPC, penyimpanan atomik)
 ├── src/
-│   ├── lib/           # tipe data, tanggal, storage, migrasi
-│   ├── modules/       # dashboard, kalender, jadwal, riwayat, notepad
-│   ├── assets/        # logo aplikasi
-│   ├── main.ts        # routing, tema, modal
-│   └── styles.css     # tema Kertas & Tinta
-├── build/             # ikon aplikasi (SVG + PNG)
-├── tests/             # unit test (vitest)
+│   ├── lib/             # tipe data, tanggal, storage, migrasi
+│   ├── modules/         # dashboard, kalender, jadwal, riwayat, notepad
+│   ├── assets/          # logo aplikasi
+│   ├── main.ts          # routing, tema, modal
+│   └── styles.css       # tema Kertas & Tinta
+├── build/               # ikon aplikasi (SVG + PNG)
+├── docs/screenshots/    # screenshot untuk README
+├── tests/               # unit test (Vitest)
 └── index.html
 ```
 
-## Teknologi
+</details>
 
-- [Electron](https://www.electronjs.org/) 30
-- [electron-vite](https://electron-vite.org/) + TypeScript
-- [Vitest](https://vitest.dev/) untuk unit test
-- [electron-builder](https://www.electron.build/) untuk paket Windows (NSIS + portable)
-- Vanilla TypeScript — tanpa framework UI
+<details>
+<summary><b>Stack & keamanan</b></summary>
+<br>
 
-Keamanan: `contextIsolation: true`, `nodeIntegration: false`, akses file hanya lewat IPC.
+| Bagian | Teknologi |
+| --- | --- |
+| Desktop shell | Electron 30 |
+| Bundler/dev | electron-vite + Vite + TypeScript |
+| UI | Vanilla TypeScript + CSS |
+| Test | Vitest |
+| Packaging | electron-builder (NSIS + portable) |
+
+Keamanan Electron:
+- `contextIsolation: true`
+- `nodeIntegration: false`
+- Akses file hanya lewat IPC preload
+
+</details>
 
 ---
 
-<p align="center"><sub>Dibuat untuk latihan yang konsisten. Data tetap milik Anda.</sub></p>
+<div align="center">
+
+**Data tetap milik Anda. Latihan tetap konsisten.**
+
+<sub>Dibuat dengan Electron + TypeScript • [Laporkan issue](https://github.com/Bim-git-hub/WorkOut-Plan/issues)</sub>
+
+</div>
