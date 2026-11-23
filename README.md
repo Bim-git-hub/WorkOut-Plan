@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=E4411B&height=230&section=header&text=Workout%20Log&fontSize=64&fontColor=ECE8DF&fontAlign=50&fontAlignY=38&desc=Catatan%20latihan%20yang%20offline%2C%20rapi%2C%20dan%20fokus%20ke%20progres&descSize=18&descAlignY=58&animation=fadeIn" width="100%" alt="Workout Log">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=E4411B&height=230&section=header&text=WorkOut-Plan&fontSize=64&fontColor=ECE8DF&fontAlign=50&fontAlignY=38&desc=Catatan%20latihan%20yang%20offline%2C%20rapi%2C%20dan%20fokus%20ke%20progres&descSize=18&descAlignY=58&animation=fadeIn" width="100%" alt="WorkOut-Plan">
 
-<img src="workout-tracker/build/icon.png" width="96" alt="Logo Workout Log">
+<p align="center">
+  <img src="workout-tracker/build/icon.png" width="110" alt="Logo WorkOut-Plan">
+</p>
 
-<a href="https://github.com/Bim-git-hub/WorkOut-Plan">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=17&duration=3200&pause=900&color=E4411B&center=true&vCenter=true&width=660&height=40&lines=Tandai+hari+latihan+dengan+satu+klik;Streak%2C+konsistensi%2C+dan+riwayat+dalam+satu+layar;Offline+penuh.+Tanpa+akun.+Tanpa+telemetri.;Data+tetap+milik+Anda" alt="Workout Log: tandai latihan, pantau streak, offline penuh">
-</a>
-
-<br>
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&duration=3000&pause=1000&color=E4411B&center=true&vCenter=true&width=700&height=45&lines=Tandai+hari+latihan+dengan+satu+klik;Streak%2C+konsistensi%2C+dan+riwayat+dalam+satu+layar;Offline+penuh.+Tanpa+akun.+Tanpa+telemetri.;Data+tetap+milik+Anda" width="700" height="45" alt="WorkOut-Plan: tandai latihan, pantau streak, offline penuh">
+</p>
 
 [![Release](https://img.shields.io/github/v/release/Bim-git-hub/WorkOut-Plan?display_name=tag&style=for-the-badge&color=E4411B&label=Release)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Windows-161512?style=for-the-badge)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest)
@@ -37,7 +37,7 @@
 
 ## 🧩 Sekilas
 
-**Workout Log** adalah aplikasi desktop untuk mencatat latihan tanpa ribet. Atur jadwal mingguan sekali, lalu setiap selesai latihan cukup klik tanggalnya. Sebuah **✕ merah tergambar di kalender**, streak bertambah, dan progres bulan ini langsung terlihat.
+**WorkOut-Plan** adalah aplikasi desktop untuk mencatat latihan tanpa ribet. Atur jadwal mingguan sekali, lalu setiap selesai latihan cukup klik tanggalnya. Sebuah **✕ merah tergambar di kalender**, streak bertambah, dan progres bulan ini langsung terlihat.
 
 <table>
 <tr>
@@ -56,7 +56,7 @@
 
 | Dashboard | Kalender |
 | :---: | :---: |
-| <img src="workout-tracker/docs/screenshots/dashboard.png" alt="Dashboard Workout Log" width="100%"> | <img src="workout-tracker/docs/screenshots/calendar.png" alt="Kalender Workout Log" width="100%"> |
+| <img src="workout-tracker/docs/screenshots/dashboard.png" alt="Dashboard WorkOut-Plan" width="100%"> | <img src="workout-tracker/docs/screenshots/calendar.png" alt="Kalender WorkOut-Plan" width="100%"> |
 
 | Lembar Harian | Jadwal |
 | :---: | :---: |
