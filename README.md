@@ -1,10 +1,14 @@
 <div align="center">
 
-<img src="workout-tracker/build/icon.png" width="120" alt="Workout Log logo">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=E4411B&height=230&section=header&text=Workout%20Log&fontSize=64&fontColor=ECE8DF&fontAlign=50&fontAlignY=38&desc=Catatan%20latihan%20yang%20offline%2C%20rapi%2C%20dan%20fokus%20ke%20progres&descSize=18&descAlignY=58&animation=fadeIn" width="100%" alt="Workout Log">
 
-# Workout Log
+<img src="workout-tracker/build/icon.png" width="96" alt="Logo Workout Log">
 
-**Pelacak latihan desktop yang offline, rapi, dan fokus ke progres.**
+<a href="https://github.com/Bim-git-hub/WorkOut-Plan">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=17&duration=3200&pause=900&color=E4411B&center=true&vCenter=true&width=660&height=40&lines=Tandai+hari+latihan+dengan+satu+klik;Streak%2C+konsistensi%2C+dan+riwayat+dalam+satu+layar;Offline+penuh.+Tanpa+akun.+Tanpa+telemetri.;Data+tetap+milik+Anda" alt="Workout Log: tandai latihan, pantau streak, offline penuh">
+</a>
+
+<br>
 
 [![Release](https://img.shields.io/github/v/release/Bim-git-hub/WorkOut-Plan?display_name=tag&style=for-the-badge&color=E4411B&label=Release)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Windows-161512?style=for-the-badge)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest)
@@ -12,13 +16,17 @@
 [![Electron](https://img.shields.io/badge/Electron-30-47848F?style=for-the-badge&logo=electron&logoColor=white)](https://www.electronjs.org/)
 
 <p>
-  <a href="https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest"><b>⬇ Unduh Aplikasi</b></a>
+  <a href="#-unduh"><b>⬇ Unduh</b></a>
   &nbsp;•&nbsp;
   <a href="#-preview"><b>Preview</b></a>
+  &nbsp;•&nbsp;
+  <a href="#-detail-yang-bergerak"><b>Gerak</b></a>
   &nbsp;•&nbsp;
   <a href="#-fitur"><b>Fitur</b></a>
   &nbsp;•&nbsp;
   <a href="#-cara-pakai"><b>Cara Pakai</b></a>
+  &nbsp;•&nbsp;
+  <a href="#-faq"><b>FAQ</b></a>
   &nbsp;•&nbsp;
   <a href="#-pengembangan"><b>Pengembangan</b></a>
 </p>
@@ -26,6 +34,19 @@
 </div>
 
 ---
+
+## 🧩 Sekilas
+
+**Workout Log** adalah aplikasi desktop untuk mencatat latihan tanpa ribet. Atur jadwal mingguan sekali, lalu setiap selesai latihan cukup klik tanggalnya. Sebuah **✕ merah tergambar di kalender**, streak bertambah, dan progres bulan ini langsung terlihat.
+
+<table>
+<tr>
+<td align="center" width="25%"><h3>1 klik</h3><sub>untuk menandai<br>hari latihan selesai</sub></td>
+<td align="center" width="25%"><h3>100% offline</h3><sub>tanpa akun, CDN,<br>atau telemetri</sub></td>
+<td align="center" width="25%"><h3>2 tema</h3><sub>Kertas (terang) dan<br>Tinta (gelap)</sub></td>
+<td align="center" width="25%"><h3>Data lokal</h3><sub>ekspor dan impor<br>backup JSON</sub></td>
+</tr>
+</table>
 
 ## ✨ Preview
 
@@ -52,6 +73,33 @@
 </details>
 
 </details>
+
+## 🎬 Detail yang Bergerak
+
+Gerakan di aplikasi sengaja dibuat halus dan punya fungsi, bukan sekadar hiasan:
+
+| Elemen | Gerakan |
+| --- | --- |
+| **Tanda ✕** | Dua goresan tergambar berurutan saat hari ditandai selesai. Kemiringan sedikit berbeda tiap tanggal, jadi terasa seperti dicoret tangan. |
+| **Ganti bulan** | Grid kalender bergeser ke arah navigasi (kiri atau kanan), sehingga jelas Anda sedang maju atau mundur. |
+| **Dashboard** | Garis tren di masthead tergambar saat halaman dibuka, sementara ilustrasinya berputar, mengambang, dan berdenyut pelan. |
+| **Pindah halaman** | Tampilan baru muncul dengan fade dan geser ringan. |
+| **Lembar harian** | Popup masuk dengan fade dan naik sedikit. |
+| **Kurangi gerakan** | Semua animasi otomatis mati jika sistem operasi diatur ke "kurangi gerakan" (`prefers-reduced-motion`). |
+
+**Satu putaran latihan:**
+
+```mermaid
+flowchart LR
+    A([Atur jadwal<br/>mingguan]) --> B([Buka kalender])
+    B --> C([Klik tanggal<br/>lembar harian])
+    C --> D([Tandai selesai])
+    D --> E([X tergambar<br/>di kalender])
+    E --> F([Streak dan progres<br/>diperbarui])
+    F -. besok .-> B
+    classDef hot fill:#E4411B,stroke:#161512,color:#ffffff
+    class D,E hot
+```
 
 ## 🧭 Fitur
 
@@ -161,6 +209,58 @@ Dua tema editorial: **Kertas** (terang) dan **Tinta** (gelap). Ganti tema langsu
 - **Backup manual** — ekspor/impor JSON dari menu Pengaturan.
 - **Kompatibel** — format backup tetap kompatibel dengan prototipe `workout-tracker.html`.
 
+```mermaid
+flowchart LR
+    UI["Tampilan<br/>(renderer)"] -- "IPC via preload" --> M["Main process"]
+    M -- "tulis atomik" --> D[("data.json")]
+    D -. "cadangan otomatis" .-> B[("data.bak.json")]
+    M --- X["Ekspor / impor<br/>backup JSON"]
+    classDef store fill:#161512,stroke:#E4411B,color:#ECE8DF
+    class D,B store
+```
+
+## ❓ FAQ
+
+<details>
+<summary><b>Apakah butuh internet?</b></summary>
+<br>
+
+Tidak. Aplikasi berjalan sepenuhnya offline dan tidak mengirim data apa pun.
+
+</details>
+
+<details>
+<summary><b>Di mana data latihan disimpan?</b></summary>
+<br>
+
+Di komputer Anda sendiri, pada `%APPDATA%\workout-tracker\data.json`.
+
+</details>
+
+<details>
+<summary><b>Bagaimana memindahkan data ke komputer lain?</b></summary>
+<br>
+
+Buka **Pengaturan** → **Ekspor backup** di komputer lama, lalu **Impor backup** di komputer baru.
+
+</details>
+
+<details>
+<summary><b>Kenapa Windows SmartScreen memperingatkan saya?</b></summary>
+<br>
+
+Aplikasi belum ditandatangani digital (code signing). Pilih **More info** lalu **Run anyway** untuk melanjutkan.
+
+</details>
+
+<details>
+<summary><b>Saya sudah punya catatan dari prototipe <code>workout-tracker.html</code>. Bisa dipakai?</b></summary>
+<br>
+
+Bisa. Ekspor backup dari prototipe, lalu impor di aplikasi desktop lewat menu **Pengaturan**. Formatnya kompatibel.
+
+</details>
+
 ## 🛠 Pengembangan
 
 <details>
@@ -190,7 +290,7 @@ workout-tracker/
 ├── electron/            # main process + preload (IPC, penyimpanan atomik)
 ├── src/
 │   ├── lib/             # tipe data, tanggal, storage, migrasi
-│   ├── modules/         # dashboard, kalender, jadwal, riwayat, notepad
+│   ├── modules/         # dashboard, kalender, jadwal, riwayat, notepad, stats, xmark
 │   ├── assets/          # logo aplikasi
 │   ├── main.ts          # routing, tema, modal
 │   └── styles.css       # tema Kertas & Tinta
@@ -228,5 +328,11 @@ Keamanan Electron:
 **Data tetap milik Anda. Latihan tetap konsisten.**
 
 <sub>Dibuat dengan Electron + TypeScript • [Laporkan issue](https://github.com/Bim-git-hub/WorkOut-Plan/issues)</sub>
+
+<br>
+
+<sub>Banner dan teks mengetik di README ini dirender oleh <a href="https://github.com/kyechan99/capsule-render">capsule-render</a> dan <a href="https://github.com/DenverCoder1/readme-typing-svg">readme-typing-svg</a>. Keduanya hanya tampil di halaman GitHub, tidak dipakai aplikasi, yang tetap 100% offline.</sub>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=161512&height=110&section=footer" width="100%" alt="">
 
 </div>
