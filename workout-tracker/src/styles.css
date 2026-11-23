@@ -66,9 +66,44 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.day:focus-visib
 .view.active{display:block;animation:fadeIn .22s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding:26px 0 22px}
-.mast h1{margin:0;font:400 clamp(56px,11vw,150px)/.8 var(--serif);letter-spacing:-.045em}
+.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding:22px 0 18px}
+.mast-main{display:flex;align-items:flex-end;gap:26px;flex:1 1 520px;min-width:0}
+.mast h1{margin:0;font:400 clamp(34px,5.2vw,64px)/.95 var(--serif);letter-spacing:-.03em;white-space:nowrap}
+.mast-visual{flex:1 1 auto;height:84px;min-width:120px;max-width:620px;align-self:flex-end;opacity:.95}
+.mast-visual svg{width:100%;height:100%;overflow:visible}
 .mast .side{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+
+/* masthead line-art */
+.mast-visual .mv-line,
+.mast-visual .mv-spark,
+.mast-visual .mv-arcs circle,
+.mast-visual .mv-arcs path,
+.mast-visual .mv-ticks path,
+.mast-visual .mv-grid rect,
+.mast-visual .mv-grid path,
+.mast-visual .mv-check,
+.mast-visual .mv-sun circle,
+.mast-visual .mv-sun .rays path,
+.mast-visual .mv-dumbbell path,
+.mast-visual .mv-dumbbell rect,
+.mast-visual .mv-gear circle,
+.mast-visual .mv-gear path{
+  fill:none;stroke:var(--fg);stroke-width:1.4;vector-effect:non-scaling-stroke;
+}
+.mast-visual .mv-accent,
+.mast-visual .mv-spark,
+.mast-visual .mv-sun circle,
+.mast-visual .mv-sun .rays path,
+.mast-visual .mv-check,
+.mast-visual .mv-ticks path{stroke:var(--accent);stroke-width:1.8}
+.mast-visual .mv-dot{fill:var(--accent);stroke:none}
+.mast-visual .mv-dots circle{fill:var(--fg);stroke:none;opacity:.45}
+.mast-visual .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:mvDraw 1.8s ease forwards}
+@keyframes mvDraw{to{stroke-dashoffset:0}}
+.mast-visual .spin-slow{transform-box:fill-box;transform-origin:center;animation:mvSpin 36s linear infinite}
+@keyframes mvSpin{to{transform:rotate(360deg)}}
+.mast-visual .bob{transform-box:fill-box;animation:mvBob 4.5s ease-in-out infinite}
+@keyframes mvBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .year{display:block;font:400 clamp(18px,2.6vw,30px)/1 var(--mono);letter-spacing:.08em}
 .nav{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
 .nbtn{
@@ -298,6 +333,7 @@ footer{
   .dash-grid,.settings-grid{grid-template-columns:1fr}
   .schedule-grid{grid-template-columns:1fr}
   .history-item{grid-template-columns:1fr;gap:8px}
+  .mast-visual{height:66px}
 }
 @media(max-width:640px){
   .wrap{padding:16px}
@@ -305,6 +341,7 @@ footer{
   .tabs{gap:12px}
   .top-right{width:100%;justify-content:space-between}
   .mast{padding:20px 0 16px}
+  .mast-visual{display:none}
   .day .lbl{display:none}
   .day{min-height:54px;padding:6px;aspect-ratio:auto}
   .day .n{font-size:19px}
@@ -314,3 +351,4 @@ footer{
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
+.mast-visual .mv-dot{animation:mvPulse 2.4s ease-in-out infinite}@keyframes mvPulse{0%,100%{opacity:.45}50%{opacity:1}}
