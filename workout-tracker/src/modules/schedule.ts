@@ -27,15 +27,15 @@ export function renderSchedule(state: WorkoutState, persist: () => Promise<void>
           </div>
           <div class="field-label" style="margin:10px 0 8px">Daftar latihan</div>
           ${list.map((e, i) => `<div class="erow">
-            <input type="text" value="${esc(e.n)}" placeholder="Nama latihan">
-            <input type="text" value="${esc(e.d)}" placeholder="3 x 12">
-            <button data-del="${i}" title="Hapus">✕</button>
+            <input class="einput" type="text" value="${esc(e.n)}" placeholder="Nama latihan">
+            <input class="einput" type="text" value="${esc(e.d)}" placeholder="3 x 12">
+            <button class="x" data-del="${i}" title="Hapus">×</button>
           </div>`).join('')}
         </div>
-        <div class="btnrow">
-          <button class="btn" data-action="add" data-day="${wd}">+ Latihan</button>
-          <button class="btn primary" data-action="save" data-day="${wd}">Simpan</button>
-          <button class="btn" data-action="cancel" data-day="${wd}">Batal</button>
+        <div class="row">
+          <button class="tbtn" data-action="add" data-day="${wd}">+ Latihan</button>
+          <button class="tbtn fill" data-action="save" data-day="${wd}">Simpan</button>
+          <button class="tbtn" data-action="cancel" data-day="${wd}">Batal</button>
         </div>
       </div>`
     }
@@ -53,7 +53,7 @@ export function renderSchedule(state: WorkoutState, persist: () => Promise<void>
           ? list.map((e) => `<div class="schedule-exercise"><span>${esc(e.n)}</span><i>${esc(e.d)}</i></div>`).join('')
           : `<div class="empty-state" style="padding:12px">Hari istirahat</div>`}
       </div>
-      <div class="btnrow"><button class="btn" data-action="edit" data-day="${wd}">Edit jadwal</button></div>
+      <div class="row"><button class="tbtn" data-action="edit" data-day="${wd}">Edit jadwal</button></div>
     </div>`
   }).join('')
 

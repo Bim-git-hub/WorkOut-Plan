@@ -1,4 +1,4 @@
-import './styles.css'
+﻿import './styles.css'
 import { fmt } from './lib/dates'
 import { loadState, saveState, exportBackup, importBackup } from './lib/storage'
 import { normalizeState, defaultState, type WorkoutState } from './lib/types'
@@ -11,14 +11,6 @@ import { renderHistory } from './modules/history'
 
 type ViewName = 'dashboard' | 'calendar' | 'schedule' | 'history' | 'settings'
 
-const VIEW_META: Record<ViewName, { title: string; sub: string }> = {
-  dashboard: { title: 'Dashboard', sub: 'Ringkasan progres latihan Anda' },
-  calendar: { title: 'Kalender', sub: 'Pantau dan tandai sesi latihan harian' },
-  schedule: { title: 'Jadwal', sub: 'Kelola template latihan mingguan' },
-  history: { title: 'Riwayat', sub: 'Lihat catatan workout yang telah selesai' },
-  settings: { title: 'Pengaturan', sub: 'Kelola data dan preferensi aplikasi' }
-}
-
 let state: WorkoutState = defaultState()
 let viewDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 let selected = fmt(new Date())
@@ -27,22 +19,22 @@ let justMarked: string | null = null
 let flip = ''
 let currentView: ViewName = 'dashboard'
 
-type Theme = 'dark' | 'light'
-const THEME_KEY = 'workout-tracker-theme'
+type Theme = 'paper' | 'ink'
+const THEME_KEY = 'workout-log-theme'
 
 function applyTheme(theme: Theme) {
   document.documentElement.setAttribute('data-theme', theme)
   try { localStorage.setItem(THEME_KEY, theme) } catch {}
   const btn = document.getElementById('themeToggle')
-  if (btn) btn.setAttribute('aria-pressed', String(theme === 'light'))
+  if (btn) btn.textContent = theme === 'paper' ? 'Mode Tinta' : 'Mode Kertas'
 }
 
 function initTheme() {
-  let theme: Theme = 'dark'
+  let theme: Theme = 'paper'
   try {
     const saved = localStorage.getItem(THEME_KEY) as Theme | null
-    if (saved === 'light' || saved === 'dark') theme = saved
-    else if (window.matchMedia?.('(prefers-color-scheme: light)').matches) theme = 'light'
+    if (saved === 'paper' || saved === 'ink') theme = saved
+    else if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) theme = 'ink'
   } catch {}
   applyTheme(theme)
 }
@@ -82,26 +74,25 @@ async function closeDayModal() {
   }
 }
 
+const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
+const DAYS_SHORT = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
+
 function updateChrome() {
   const now = new Date()
-  const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-  const short = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
-  const sd = document.getElementById('sidebarDate')
-  const td = document.getElementById('topbarDate')
-  if (sd) sd.textContent = short
-  if (td) td.textContent = dateStr
-  const meta = VIEW_META[currentView]
-  const t = document.getElementById('pageTitle')
-  const s = document.getElementById('pageSub')
-  if (t) t.textContent = meta.title
-  if (s) s.textContent = meta.sub
+  const line = `${DAYS_SHORT[now.getDay()]}, ${now.getDate()} ${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`
+  const tl = document.getElementById('todayLine')
+  if (tl) tl.textContent = line
+  const fd = document.getElementById('footDate')
+  if (fd) fd.textContent = `${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`
+  const dm = document.getElementById('dashMonth')
+  if (dm) dm.textContent = `${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`
 }
 
 function switchView(name: ViewName) {
   currentView = name
   closeDayModal()
   document.querySelectorAll<HTMLElement>('.view').forEach((el) => el.classList.toggle('active', el.id === `view-${name}`))
-  document.querySelectorAll<HTMLElement>('.nav-item[data-view]').forEach((el) => el.classList.toggle('active', el.dataset.view === name))
+  document.querySelectorAll<HTMLElement>('.tabs [data-view]').forEach((el) => el.classList.toggle('active', el.dataset.view === name))
   updateChrome()
   renderCurrentView()
 }
@@ -155,10 +146,10 @@ async function init() {
 
   document.getElementById('themeToggle')?.addEventListener('click', () => {
     const current = document.documentElement.getAttribute('data-theme')
-    applyTheme(current === 'light' ? 'dark' : 'light')
+    applyTheme(current === 'ink' ? 'paper' : 'ink')
   })
 
-  document.querySelectorAll<HTMLElement>('.nav-item[data-view]').forEach((btn) => {
+  document.querySelectorAll<HTMLElement>('.tabs [data-view]').forEach((btn) => {
     btn.addEventListener('click', () => switchView(btn.dataset.view as ViewName))
   })
   document.querySelectorAll<HTMLElement>('[data-goto]').forEach((btn) => {
@@ -167,12 +158,12 @@ async function init() {
 
   document.getElementById('prev')!.addEventListener('click', () => {
     viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1)
-    flip = 'flip-prev'
+    flip = 'slide-p'
     renderAll()
   })
   document.getElementById('next')!.addEventListener('click', () => {
     viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1)
-    flip = 'flip-next'
+    flip = 'slide-n'
     renderAll()
   })
   document.getElementById('todayBtn')!.addEventListener('click', () => {
@@ -180,7 +171,7 @@ async function init() {
     viewDate = new Date(t.getFullYear(), t.getMonth(), 1)
     selected = fmt(t)
     editing = false
-    flip = 'flip-next'
+    flip = 'slide-n'
     renderAll()
     openDayModal()
   })
@@ -229,10 +220,24 @@ async function init() {
     if (e.target === e.currentTarget) closeDayModal()
   })
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeDayModal()
+    if (e.key === 'Escape') { void closeDayModal(); return }
+    if (currentView !== 'calendar') return
+    const tag = (e.target as HTMLElement)?.tagName
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return
+    if (e.key === 'ArrowLeft') {
+      viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1)
+      flip = 'slide-p'
+      renderAll()
+    }
+    if (e.key === 'ArrowRight') {
+      viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1)
+      flip = 'slide-n'
+      renderAll()
+    }
   })
 
   renderAll()
 }
 
 void init()
+
