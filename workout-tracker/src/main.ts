@@ -88,13 +88,83 @@ function updateChrome() {
   if (dm) dm.textContent = `${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`
 }
 
+const VIEW_ORDER: ViewName[] = ['dashboard', 'calendar', 'schedule', 'history', 'settings']
+
+function updateTabIndicator(name: ViewName = currentView, instant = false) {
+  const tabs = document.querySelector<HTMLElement>('.tabs')
+  const indicator = tabs?.querySelector<HTMLElement>('.tab-indicator')
+  const btn = tabs?.querySelector<HTMLElement>(`[data-view="${name}"]`)
+  if (!tabs || !indicator || !btn) return
+  const tr = tabs.getBoundingClientRect()
+  const br = btn.getBoundingClientRect()
+  if (instant) indicator.style.transition = 'none'
+  indicator.style.width = `${br.width}px`
+  indicator.style.transform = `translateX(${br.left - tr.left}px)`
+  if (instant) {
+    void indicator.offsetWidth
+    indicator.style.transition = ''
+  }
+}
+
+let viewTx = 0
+function finishViewTransition(el: HTMLElement) {
+  el.classList.remove('leaving', 'entering', 'back')
+}
+
 function switchView(name: ViewName) {
+  if (name === currentView) return
+  const prev = currentView
+  const dir = VIEW_ORDER.indexOf(name) > VIEW_ORDER.indexOf(prev) ? 1 : -1
   currentView = name
   closeDayModal()
-  document.querySelectorAll<HTMLElement>('.view').forEach((el) => el.classList.toggle('active', el.id === `view-${name}`))
+
   document.querySelectorAll<HTMLElement>('.tabs [data-view]').forEach((el) => el.classList.toggle('active', el.dataset.view === name))
+  updateTabIndicator(name)
   updateChrome()
-  renderCurrentView()
+
+  const oldView = document.getElementById(`view-${prev}`)
+  const newView = document.getElementById(`view-${name}`)
+  if (!oldView || !newView) { renderCurrentView(); return }
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
+
+  const lingering = document.querySelectorAll<HTMLElement>('.view.leaving, .view.entering')
+  const tx = ++viewTx
+  if (lingering.length || reduced) {
+    document.querySelectorAll<HTMLElement>('.view').forEach((el) => { el.classList.remove('active', 'leaving', 'entering', 'back') })
+    newView.classList.add('active')
+    if (!reduced) {
+      newView.classList.add('entering')
+      if (dir < 0) newView.classList.add('back')
+      newView.addEventListener('animationend', (e) => {
+        if (e.target !== newView || tx !== viewTx) return
+        newView.classList.remove('entering', 'back')
+      }, { once: true })
+    }
+    renderCurrentView()
+    return
+  }
+
+  oldView.classList.remove('active')
+  oldView.classList.add('leaving')
+
+  const enter = () => {
+    if (tx !== viewTx) return
+    oldView.classList.remove('leaving')
+    newView.classList.add('active', 'entering')
+    if (dir < 0) newView.classList.add('back')
+    renderCurrentView()
+    newView.addEventListener('animationend', (e) => {
+      if (e.target !== newView || tx !== viewTx) return
+      newView.classList.remove('entering', 'back')
+    }, { once: true })
+  }
+
+  oldView.addEventListener('animationend', (e) => {
+    if (e.target !== oldView || tx !== viewTx) return
+    enter()
+  }, { once: true })
 }
 
 function renderCalendarView() {
@@ -155,6 +225,7 @@ async function init() {
   document.querySelectorAll<HTMLElement>('[data-goto]').forEach((btn) => {
     btn.addEventListener('click', () => switchView(btn.dataset.goto as ViewName))
   })
+  window.addEventListener('resize', () => updateTabIndicator(currentView, true))
 
   document.getElementById('prev')!.addEventListener('click', () => {
     viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1)
@@ -237,6 +308,7 @@ async function init() {
   })
 
   renderAll()
+  requestAnimationFrame(() => updateTabIndicator(currentView, true))
 }
 
 void init()
