@@ -251,6 +251,10 @@ async function init() {
     btn.addEventListener('click', () => switchView(btn.dataset.goto as ViewName))
   })
   window.addEventListener('resize', () => updateTabIndicator(currentView, true))
+  document.addEventListener('visibilitychange', () => {
+    document.documentElement.classList.toggle('idle-paused', document.hidden)
+  })
+  document.documentElement.classList.toggle('idle-paused', document.hidden)
 
   document.getElementById('prev')!.addEventListener('click', () => {
     viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1)

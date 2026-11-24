@@ -23,7 +23,8 @@ export function renderSchedule(state: WorkoutState, persist: () => Promise<void>
     const label = (state.labels?.[key] || '').trim()
     const isEditing = editingDay === wd
     const dayName = DAYS_ID[wd]
-    const cardCls = anim ? ' card-enter' : ''
+    const isToday = wd === new Date().getDay()
+    const cardCls = `${anim ? ' card-enter' : ''}${isToday ? ' today' : ''}`
     const cardStyle = anim ? ` style="--card-delay:${Math.min(i * 45, 350)}ms"` : ''
 
     if (isEditing) {
