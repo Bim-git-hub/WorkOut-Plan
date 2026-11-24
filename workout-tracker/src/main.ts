@@ -223,6 +223,7 @@ function switchView(name: ViewName) {
   oldView.classList.remove('active')
   oldView.classList.add('leaving')
 
+  const finishEnter = () => { if (tx === viewTx) newView.classList.remove('entering', 'back') }
   const enter = () => {
     if (tx !== viewTx) return
     oldView.classList.remove('leaving')
@@ -230,16 +231,16 @@ function switchView(name: ViewName) {
     if (dir < 0) newView.classList.add('back')
     renderCurrentView(true)
     triggerEnter(newView)
-    newView.addEventListener('animationend', (e) => {
-      if (e.target !== newView || tx !== viewTx) return
-      newView.classList.remove('entering', 'back')
-    }, { once: true })
+    newView.addEventListener('animationend', (e) => { if (e.target === newView) finishEnter() }, { once: true })
+    newView.addEventListener('animationcancel', (e) => { if (e.target === newView) finishEnter() }, { once: true })
+    setTimeout(() => { if (tx === viewTx) finishEnter() }, 400)
   }
 
-  oldView.addEventListener('animationend', (e) => {
-    if (e.target !== oldView || tx !== viewTx) return
-    enter()
-  }, { once: true })
+  let left = false
+  const doEnter = () => { if (left || tx !== viewTx) return; left = true; enter() }
+  oldView.addEventListener('animationend', (e) => { if (e.target === oldView) doEnter() }, { once: true })
+  oldView.addEventListener('animationcancel', (e) => { if (e.target === oldView) doEnter() }, { once: true })
+  setTimeout(doEnter, 250)
 }
 
 function renderCalendarView(enter = false) {
