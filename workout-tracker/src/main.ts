@@ -23,6 +23,7 @@ let noteEnter = false
 
 type Theme = 'paper' | 'ink'
 const THEME_KEY = 'workout-log-theme'
+const MOTION_KEY = 'workout-log-motion'
 
 function applyTheme(theme: Theme) {
   document.documentElement.setAttribute('data-theme', theme)
@@ -39,6 +40,23 @@ function initTheme() {
     else if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) theme = 'ink'
   } catch {}
   applyTheme(theme)
+}
+
+function applyMotion(off: boolean) {
+  if (off) document.documentElement.setAttribute('data-motion', 'off')
+  else document.documentElement.removeAttribute('data-motion')
+  try { localStorage.setItem(MOTION_KEY, off ? 'off' : 'on') } catch {}
+  const btn = document.getElementById('motionToggle')
+  if (btn) {
+    btn.textContent = `Kurangi animasi: ${off ? 'Aktif' : 'Mati'}`
+    btn.setAttribute('aria-pressed', off ? 'true' : 'false')
+  }
+}
+
+function initMotion() {
+  let off = false
+  try { off = localStorage.getItem(MOTION_KEY) === 'off' } catch {}
+  applyMotion(off)
 }
 
 function setEditing(v: boolean) { editing = v }
@@ -271,6 +289,7 @@ function renderAll() {
 
 async function init() {
   initTheme()
+  initMotion()
   state = await loadState()
   initCalendarStatic()
   updateChrome()
@@ -285,6 +304,10 @@ async function init() {
     } else {
       applyTheme(next)
     }
+  })
+  document.getElementById('motionToggle')?.addEventListener('click', () => {
+    const off = document.documentElement.getAttribute('data-motion') === 'off'
+    applyMotion(!off)
   })
 
   document.querySelectorAll<HTMLElement>('.tabs [data-view]').forEach((btn) => {

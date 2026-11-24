@@ -434,7 +434,10 @@ html.idle-paused .schedule-day.today::before{animation-play-state:paused}
 .mast-visual .mv-dot{animation:mvPulse 5.6s ease-in-out infinite}
 @keyframes mvPulse{0%,60%,100%{opacity:.45}80%{opacity:1}}
 
+html[data-motion="off"] *,html[data-motion="off"] *::before,html[data-motion="off"] *::after{animation:none!important;transition:none!important}
+html[data-motion="off"]::view-transition-old(root),html[data-motion="off"]::view-transition-new(root){animation:none!important}
 @media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
 }
 .mast-visual .mv-dot{animation:mvPulse 2.4s ease-in-out infinite}@keyframes mvPulse{0%,100%{opacity:.45}50%{opacity:1}}

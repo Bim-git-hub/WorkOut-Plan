@@ -16,6 +16,7 @@ function countUp(el: HTMLElement, to: number, ms = 700): void {
   if (reducedMotion()) { el.textContent = pad(to); return }
   const start = performance.now()
   const tick = (now: number) => {
+    if (reducedMotion()) { el.textContent = pad(to); rafs.delete(el.id); return }
     const t = Math.min(1, (now - start) / ms)
     const eased = 1 - Math.pow(1 - t, 3)
     el.textContent = pad(Math.round(eased * to))
