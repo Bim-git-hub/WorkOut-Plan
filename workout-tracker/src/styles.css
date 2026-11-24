@@ -210,6 +210,15 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.day:focus-visib
 @keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 .num-roll{display:inline-block;animation:numRoll 160ms var(--ease-out)}
 @keyframes numRoll{from{opacity:0;transform:translateY(40%)}to{opacity:1;transform:none}}
+.day.cell-enter{animation:cellIn 100ms var(--ease-out) both;animation-delay:var(--cell-delay,0ms)}
+@keyframes cellIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.month-enter{animation:monthIn var(--dur-base) var(--ease-out) both}
+.month-enter.back{animation-name:monthInBack}
+@keyframes monthIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+@keyframes monthInBack{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+.history-item.row-enter{animation:rowIn var(--dur-base) var(--ease-out) both;animation-delay:var(--row-delay,0ms)}
+@keyframes rowIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.schedule-day.card-enter{animation:enterRise var(--dur-base) var(--ease-out) both;animation-delay:var(--card-delay,0ms)}
 .week-bar-label{font:9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .week-bar-label.today{color:var(--accent)}
 .week-bar-val{font:9.5px var(--mono);color:var(--accent);min-height:13px}

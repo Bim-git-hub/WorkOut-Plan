@@ -190,13 +190,15 @@ function switchView(name: ViewName) {
   }, { once: true })
 }
 
-function renderCalendarView() {
+function renderCalendarView(enter = false) {
+  const anim = enter || !!flip
   renderCalendar({
     state,
     view: viewDate,
     selected,
     justMarked,
     flip,
+    enter: anim,
     onSelectDate: (dateStr) => { selected = dateStr; editing = false; renderAll(); openDayModal() }
   })
   flip = ''
@@ -218,9 +220,9 @@ function renderCalendarView() {
 
 function renderCurrentView(enter = false) {
   if (currentView === 'dashboard') renderDashboard(state, { enter })
-  if (currentView === 'calendar') renderCalendarView()
-  if (currentView === 'schedule') renderSchedule(state, persist, renderAll, reloadState)
-  if (currentView === 'history') renderHistory(state)
+  if (currentView === 'calendar') renderCalendarView(enter)
+  if (currentView === 'schedule') renderSchedule(state, persist, renderAll, reloadState, { enter })
+  if (currentView === 'history') renderHistory(state, { enter })
   // settings is static
 }
 

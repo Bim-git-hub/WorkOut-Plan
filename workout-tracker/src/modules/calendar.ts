@@ -10,7 +10,13 @@ export interface CalendarCtx {
   selected: string
   justMarked: string | null
   flip: string
+  enter?: boolean
   onSelectDate: (dateStr: string) => void
+}
+
+function reducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
 }
 
 export function initCalendarStatic(): void {
@@ -24,7 +30,17 @@ export function renderCalendar(ctx: CalendarCtx): void {
   const yearEl = document.getElementById('yearName')
   const prevEl = document.getElementById('prev')
   const nextEl = document.getElementById('next')
-  if (monthEl) monthEl.textContent = MONTHS_ID[m]
+
+  if (monthEl) {
+    monthEl.textContent = MONTHS_ID[m]
+    monthEl.classList.remove('month-enter', 'back')
+    if (ctx.flip && !reducedMotion()) {
+      void monthEl.offsetWidth
+      monthEl.classList.add('month-enter')
+      if (ctx.flip === 'slide-p') monthEl.classList.add('back')
+      monthEl.addEventListener('animationend', () => monthEl.classList.remove('month-enter', 'back'), { once: true })
+    }
+  }
   if (yearEl) yearEl.textContent = String(view.getFullYear())
   if (prevEl) prevEl.textContent = `← ${MONTHS_ID[(m + 11) % 12].slice(0, 3)}`
   if (nextEl) nextEl.textContent = `${MONTHS_ID[(m + 1) % 12].slice(0, 3)} →`
@@ -34,6 +50,7 @@ export function renderCalendar(ctx: CalendarCtx): void {
   const total = new Date(view.getFullYear(), m + 1, 0).getDate()
   const trail = (7 - ((lead + total) % 7)) % 7
   const todayStr = fmt(new Date())
+  const animateCells = !!ctx.enter && !reducedMotion()
   let html = ''
   for (let i = 0; i < lead; i++) html += `<div class="day empty"></div>`
   for (let d = 1; d <= total; d++) {
@@ -47,9 +64,14 @@ export function renderCalendar(ctx: CalendarCtx): void {
     if (s === todayStr) cls.push('today')
     if (s === selected) cls.push('selected')
     if (state.done[s]) cls.push('done')
+    const idx = lead + d - 1
+    const row = Math.floor(idx / 7)
+    const col = idx % 7
+    if (animateCells) cls.push('cell-enter')
+    const style = animateCells ? ` style="--cell-delay:${Math.min((row + col) * 18, 200)}ms"` : ''
     const dayLabel = (state.labels?.[String(wd)] || '').trim()
     const label = dayLabel ? esc(dayLabel) : (list.length ? 'Latihan' : 'Istirahat')
-    html += `<div class="${cls.join(' ')}" data-d="${s}" tabindex="0" role="button" aria-label="${d} ${MONTHS_ID[m]} ${view.getFullYear()}"><span class="n">${d}</span><span class="lbl">${label}</span>${state.done[s] ? xMark(date.getFullYear() * 372 + m * 31 + d, justMarked === s) : ''}</div>`
+    html += `<div class="${cls.join(' ')}" data-d="${s}" tabindex="0" role="button" aria-label="${d} ${MONTHS_ID[m]} ${view.getFullYear()}"${style}><span class="n">${d}</span><span class="lbl">${label}</span>${state.done[s] ? xMark(date.getFullYear() * 372 + m * 31 + d, justMarked === s) : ''}</div>`
   }
   for (let i = 0; i < trail; i++) html += `<div class="day empty"></div>`
 
@@ -64,8 +86,4 @@ export function renderCalendar(ctx: CalendarCtx): void {
   })
 
   el.classList.remove('slide-n', 'slide-p')
-  if (ctx.flip) {
-    void el.offsetWidth
-    el.classList.add(ctx.flip)
-  }
 }

@@ -5,7 +5,13 @@ import type { WorkoutState } from '../lib/types'
 
 let filterMonth = ''
 
-export function renderHistory(state: WorkoutState): void {
+function reducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
+}
+
+export function renderHistory(state: WorkoutState, opts?: { enter?: boolean }): void {
+  const enter = !!opts?.enter
   const listEl = document.getElementById('historyList')
   const monthInput = document.getElementById('historyMonth') as HTMLInputElement | null
   if (!listEl) return
@@ -15,7 +21,7 @@ export function renderHistory(state: WorkoutState): void {
   if (!filterMonth) filterMonth = currentMonth
   if (monthInput) {
     if (!monthInput.value) monthInput.value = filterMonth
-    monthInput.onchange = () => { filterMonth = monthInput.value; renderHistory(state) }
+    monthInput.onchange = () => { filterMonth = monthInput.value; renderHistory(state, { enter: true }) }
   }
 
   const keys = Object.keys(state.done)
@@ -29,14 +35,17 @@ export function renderHistory(state: WorkoutState): void {
     return
   }
 
-  listEl.innerHTML = `<div class="history-list">${keys.map((k) => {
+  const anim = enter && !reducedMotion()
+  listEl.innerHTML = `<div class="history-list">${keys.map((k, i) => {
     const d = parse(k)
     const wd = d.getDay()
     const exercises = state.schedule[String(wd)] || []
     const note = state.notes[k]
     const dateStr = `${d.getDate()} ${MONTHS_ID[d.getMonth()]} ${d.getFullYear()}`
     const exLabel = exercises.length ? exercises.map((e) => `<strong>${esc(e.n)}</strong> <span style="color:var(--text-dim)">(${esc(e.d)})</span>`).join(', ') : 'Latihan selesai'
-    return `<div class="history-item">
+    const cls = `history-item${anim ? ' row-enter' : ''}`
+    const style = anim ? ` style="--row-delay:${Math.min(i * 45, 350)}ms"` : ''
+    return `<div class="${cls.trim()}"${style}>
       <div>
         <div class="history-date">${dateStr}</div>
         <div class="history-day">${DAYS_ID[wd]}</div>

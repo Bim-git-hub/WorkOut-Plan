@@ -6,19 +6,28 @@ let editingDay: number | null = null
 
 const ORDER = [1, 2, 3, 4, 5, 6, 0] // Senin..Minggu
 
-export function renderSchedule(state: WorkoutState, persist: () => Promise<void>, renderAll: () => void, reloadState: () => Promise<void>): void {
+function reducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
+}
+
+export function renderSchedule(state: WorkoutState, persist: () => Promise<void>, renderAll: () => void, reloadState: () => Promise<void>, opts?: { enter?: boolean }): void {
+  const enter = !!opts?.enter
   const grid = document.getElementById('scheduleGrid')
   if (!grid) return
 
-  grid.innerHTML = ORDER.map((wd) => {
+  const anim = enter && !reducedMotion()
+  grid.innerHTML = ORDER.map((wd, i) => {
     const key = String(wd)
     const list = state.schedule[key] || []
     const label = (state.labels?.[key] || '').trim()
     const isEditing = editingDay === wd
     const dayName = DAYS_ID[wd]
+    const cardCls = anim ? ' card-enter' : ''
+    const cardStyle = anim ? ` style="--card-delay:${Math.min(i * 45, 350)}ms"` : ''
 
     if (isEditing) {
-      return `<div class="schedule-day" data-day="${wd}">
+      return `<div class="schedule-day${cardCls}" data-day="${wd}"${cardStyle}>
         <div class="schedule-day-head"><h3>${dayName}</h3><span>Mengedit</span></div>
         <div class="schedule-edit" id="sched-edit-${wd}">
           <div class="label-row">
@@ -40,7 +49,7 @@ export function renderSchedule(state: WorkoutState, persist: () => Promise<void>
       </div>`
     }
 
-    return `<div class="schedule-day" data-day="${wd}">
+    return `<div class="schedule-day${cardCls}" data-day="${wd}"${cardStyle}>
       <div class="schedule-day-head">
         <div>
           <h3>${dayName}</h3>
