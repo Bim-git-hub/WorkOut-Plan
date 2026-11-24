@@ -152,15 +152,15 @@ Dua tema editorial: **Kertas** (terang) dan **Tinta** (gelap). Ganti tema langsu
 
 <div align="center">
 
-[![Download Setup](https://img.shields.io/badge/Download-Installer_.exe-E4411B?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest/download/Workout-Log-Setup-1.0.0.exe)
-[![Download Portable](https://img.shields.io/badge/Download-Portable_.exe-161512?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest/download/Workout-Log-1.0.0-portable.exe)
+[![Download Setup](https://img.shields.io/badge/Download-Installer_.exe-E4411B?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest/download/Workout-Log-Setup-1.2.0.exe)
+[![Download Portable](https://img.shields.io/badge/Download-Portable_.exe-161512?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Bim-git-hub/WorkOut-Plan/releases/latest/download/Workout-Log-1.2.0-portable.exe)
 
 </div>
 
 | Berkas | Cocok untuk | Catatan |
 | --- | --- | --- |
-| `Workout-Log-Setup-1.0.0.exe` | Instalasi normal | Pilih folder instalasi, buat shortcut desktop/start menu |
-| `Workout-Log-1.0.0-portable.exe` | Pakai langsung | Tanpa instalasi, cocok dibawa di folder/drive |
+| `Workout-Log-Setup-1.2.0.exe` | Instalasi normal | Pilih folder instalasi, buat shortcut desktop/start menu |
+| `Workout-Log-1.2.0-portable.exe` | Pakai langsung | Tanpa instalasi, cocok dibawa di folder/drive |
 
 > [!NOTE]
 > Aplikasi belum ditandatangani digital. Jika Windows SmartScreen muncul, pilih **More info** lalu **Run anyway**.
