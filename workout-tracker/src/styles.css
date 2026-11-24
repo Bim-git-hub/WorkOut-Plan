@@ -80,6 +80,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.day:focus-visib
 @keyframes viewEnterForward{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
 @keyframes viewEnterBack{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
 
+.enter{animation:enterRise var(--dur-base) var(--ease-out) both;animation-delay:var(--enter-delay,0ms)}
+@keyframes enterRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
 .mast{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding:22px 0 18px}
 .mast-main{display:flex;align-items:flex-end;gap:26px;flex:1 1 520px;min-width:0}
 .mast h1{margin:0;font:400 clamp(34px,5.2vw,64px)/.95 var(--serif);letter-spacing:-.03em;white-space:nowrap}

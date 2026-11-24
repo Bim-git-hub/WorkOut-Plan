@@ -106,6 +106,27 @@ function updateTabIndicator(name: ViewName = currentView, instant = false) {
   }
 }
 
+function triggerEnter(viewEl: HTMLElement) {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
+  if (reduced) return
+  const targets = [...viewEl.querySelectorAll<HTMLElement>('.mast, .stats .st, .pane')]
+  targets.forEach((el, i) => {
+    el.classList.remove('enter')
+    el.style.removeProperty('--enter-delay')
+    // force reflow so re-trigger works only when explicitly called again
+    void el.offsetWidth
+    const delay = Math.min(i * 45, 350)
+    el.style.setProperty('--enter-delay', `${delay}ms`)
+    el.classList.add('enter')
+    el.addEventListener('animationend', (e) => {
+      if (e.target !== el) return
+      el.classList.remove('enter')
+      el.style.removeProperty('--enter-delay')
+    }, { once: true })
+  })
+}
+
 let viewTx = 0
 function finishViewTransition(el: HTMLElement) {
   el.classList.remove('leaving', 'entering', 'back')
@@ -143,6 +164,7 @@ function switchView(name: ViewName) {
       }, { once: true })
     }
     renderCurrentView()
+    triggerEnter(newView)
     return
   }
 
@@ -155,6 +177,7 @@ function switchView(name: ViewName) {
     newView.classList.add('active', 'entering')
     if (dir < 0) newView.classList.add('back')
     renderCurrentView()
+    triggerEnter(newView)
     newView.addEventListener('animationend', (e) => {
       if (e.target !== newView || tx !== viewTx) return
       newView.classList.remove('entering', 'back')
@@ -309,6 +332,8 @@ async function init() {
 
   renderAll()
   requestAnimationFrame(() => updateTabIndicator(currentView, true))
+  const initView = document.getElementById(`view-${currentView}`)
+  if (initView) triggerEnter(initView)
 }
 
 void init()
