@@ -163,7 +163,7 @@ function switchView(name: ViewName) {
         newView.classList.remove('entering', 'back')
       }, { once: true })
     }
-    renderCurrentView()
+    renderCurrentView(true)
     triggerEnter(newView)
     return
   }
@@ -176,7 +176,7 @@ function switchView(name: ViewName) {
     oldView.classList.remove('leaving')
     newView.classList.add('active', 'entering')
     if (dir < 0) newView.classList.add('back')
-    renderCurrentView()
+    renderCurrentView(true)
     triggerEnter(newView)
     newView.addEventListener('animationend', (e) => {
       if (e.target !== newView || tx !== viewTx) return
@@ -216,8 +216,8 @@ function renderCalendarView() {
   renderStats(state, viewDate)
 }
 
-function renderCurrentView() {
-  if (currentView === 'dashboard') renderDashboard(state)
+function renderCurrentView(enter = false) {
+  if (currentView === 'dashboard') renderDashboard(state, { enter })
   if (currentView === 'calendar') renderCalendarView()
   if (currentView === 'schedule') renderSchedule(state, persist, renderAll, reloadState)
   if (currentView === 'history') renderHistory(state)
@@ -330,7 +330,8 @@ async function init() {
     }
   })
 
-  renderAll()
+  updateChrome()
+  renderCurrentView(true)
   requestAnimationFrame(() => updateTabIndicator(currentView, true))
   const initView = document.getElementById(`view-${currentView}`)
   if (initView) triggerEnter(initView)

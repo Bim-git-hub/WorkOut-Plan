@@ -138,13 +138,16 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.day:focus-visib
 .st .v{font:400 clamp(38px,4vw,58px)/1.05 var(--serif);letter-spacing:-.03em;margin-top:6px}
 .st .v small{font:12px var(--mono);letter-spacing:.06em;color:var(--muted);margin-left:8px}
 .meter{height:3px;background:var(--rule);margin-top:12px;overflow:hidden}
-.meter i{display:block;height:100%;width:0;background:var(--accent);transition:width .6s ease}
+.meter i{display:block;height:100%;width:0;background:var(--accent);transform-origin:left;transition:width .6s ease}
+.meter i.grow-x{transition:none;animation:growX var(--dur-slow) var(--ease-out) both}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .wk{display:flex;gap:5px;margin-top:12px}
 .wk div{flex:1;font:9.5px var(--mono);text-align:center;color:var(--muted)}
 .wk i{display:block;aspect-ratio:1;border:1.5px solid var(--fg);margin-bottom:4px;transition:background .15s,border-color .15s}
 .wk .on i{background:var(--fg)}
 .wk .now i{border-color:var(--accent);border-width:2px}
 .wk .now.on i{background:var(--accent)}
+.wk div.sq-enter{animation:enterRise var(--dur-base) var(--ease-out) both;animation-delay:var(--sq-delay,0ms)}
 
 /* ---------- calendar ---------- */
 .calendar{margin-top:26px}
@@ -201,8 +204,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.day:focus-visib
   width:100%;max-width:40px;height:110px;border:1.5px solid var(--fg);
   display:flex;align-items:flex-end;overflow:hidden;background:transparent;
 }
-.week-bar-fill{width:100%;background:var(--fg);transition:height .5s cubic-bezier(.2,.8,.2,1)}
+.week-bar-fill{width:100%;background:var(--fg);transform-origin:bottom;transition:height .5s cubic-bezier(.2,.8,.2,1)}
 .week-bar-fill.empty{background:transparent;height:2px !important}
+.week-bar-fill.bar-grow{animation:growY var(--dur-slow) var(--ease-out) both;animation-delay:var(--bar-delay,0ms)}
+@keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.num-roll{display:inline-block;animation:numRoll 160ms var(--ease-out)}
+@keyframes numRoll{from{opacity:0;transform:translateY(40%)}to{opacity:1;transform:none}}
 .week-bar-label{font:9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .week-bar-label.today{color:var(--accent)}
 .week-bar-val{font:9.5px var(--mono);color:var(--accent);min-height:13px}

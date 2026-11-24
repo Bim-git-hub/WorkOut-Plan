@@ -4,6 +4,41 @@ import { esc } from '../lib/utils'
 import type { WorkoutState } from '../lib/types'
 
 const DAYS_SHORT = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
+const prevNums = new Map<string, number>()
+const rafs = new Map<string, number>()
+
+function reducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
+}
+
+function countUp(el: HTMLElement, to: number, ms = 700): void {
+  const prev = rafs.get(el.id)
+  if (prev) cancelAnimationFrame(prev)
+  if (reducedMotion()) { el.textContent = pad(to); return }
+  const start = performance.now()
+  const tick = (now: number) => {
+    const t = Math.min(1, (now - start) / ms)
+    const eased = 1 - Math.pow(1 - t, 3)
+    el.textContent = pad(Math.round(eased * to))
+    if (t < 1) rafs.set(el.id, requestAnimationFrame(tick))
+    else rafs.delete(el.id)
+  }
+  rafs.set(el.id, requestAnimationFrame(tick))
+}
+
+function rollNum(el: HTMLElement, to: number): void {
+  const prev = rafs.get(el.id)
+  if (prev) { cancelAnimationFrame(prev); rafs.delete(el.id) }
+  const next = pad(to)
+  if (el.textContent === next) return
+  if (reducedMotion()) { el.textContent = next; return }
+  el.classList.remove('num-roll')
+  void el.offsetWidth
+  el.textContent = next
+  el.classList.add('num-roll')
+  el.addEventListener('animationend', () => el.classList.remove('num-roll'), { once: true })
+}
 
 function lastNDays(n: number, now = new Date()): Date[] {
   const out: Date[] = []
@@ -16,7 +51,8 @@ function lastNDays(n: number, now = new Date()): Date[] {
   return out
 }
 
-export function renderDashboard(state: WorkoutState): void {
+export function renderDashboard(state: WorkoutState, opts?: { enter?: boolean }): void {
+  const enter = !!opts?.enter
   const now = new Date()
   const today = fmt(now)
   const streak = calcStreak(state.done, now)
@@ -25,13 +61,31 @@ export function renderDashboard(state: WorkoutState): void {
   const daysElapsed = now.getDate()
   const consistency = daysElapsed > 0 ? Math.round((monthCount / daysElapsed) * 100) : 0
 
-  const set = (id: string, val: string) => { const el = document.getElementById(id); if (el) el.textContent = val }
-  set('dbStreak', pad(streak))
-  set('dbMonth', pad(monthCount))
-  set('dbTotal', pad(total))
-  set('dbMonthMeta', `${MONTHS_ID[now.getMonth()].slice(0, 3)} · ${consistency}%`)
+  const nums: [string, number][] = [['dbStreak', streak], ['dbMonth', monthCount], ['dbTotal', total]]
+  for (const [id, val] of nums) {
+    const el = document.getElementById(id)
+    if (!el) continue
+    if (enter) { el.textContent = '00'; countUp(el, val) }
+    else if (prevNums.get(id) !== val) rollNum(el, val)
+    else el.textContent = pad(val)
+    prevNums.set(id, val)
+  }
+
+  const meta = document.getElementById('dbMonthMeta')
+  if (meta) meta.textContent = `${MONTHS_ID[now.getMonth()].slice(0, 3)} · ${consistency}%`
+
   const bar = document.getElementById('dbConsistencyBar') as HTMLElement | null
-  if (bar) bar.style.width = `${Math.min(100, consistency)}%`
+  if (bar) {
+    bar.style.width = `${Math.min(100, consistency)}%`
+    if (enter && !reducedMotion()) {
+      bar.classList.remove('grow-x')
+      void bar.offsetWidth
+      bar.classList.add('grow-x')
+      bar.addEventListener('animationend', () => bar.classList.remove('grow-x'), { once: true })
+    } else {
+      bar.classList.remove('grow-x')
+    }
+  }
 
   // week squares (Mon..Sun of current week)
   const mon = new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -43,7 +97,10 @@ export function renderDashboard(state: WorkoutState): void {
       const x = new Date(mon)
       x.setDate(mon.getDate() + i)
       const s = fmt(x)
-      wh += `<div class="${state.done[s] ? 'on' : ''} ${s === today ? 'now' : ''}"><i></i>${DAYS_SHORT[x.getDay()][0]}</div>`
+      const anim = enter && !reducedMotion()
+      const cls = `${state.done[s] ? 'on' : ''} ${s === today ? 'now' : ''}${anim ? ' sq-enter' : ''}`.trim()
+      const style = anim ? ` style="--sq-delay:${i * 45}ms"` : ''
+      wh += `<div class="${cls}"${style}><i></i>${DAYS_SHORT[x.getDay()][0]}</div>`
     }
     squares.innerHTML = wh
   }
@@ -52,13 +109,16 @@ export function renderDashboard(state: WorkoutState): void {
   const bars = document.getElementById('dbWeekBars')
   if (bars) {
     const days = lastNDays(7, now)
-    bars.innerHTML = days.map((d) => {
+    bars.innerHTML = days.map((d, i) => {
       const k = fmt(d)
       const done = !!state.done[k]
       const isToday = k === today
+      const anim = enter && !reducedMotion()
+      const fillCls = `week-bar-fill ${done ? '' : 'empty'}${anim ? ' bar-grow' : ''}`.trim()
+      const fillStyle = `height:${done ? 100 : 2}%${anim ? `;--bar-delay:${i * 45}ms` : ''}`
       return `<div class="week-bar-col">
         <div class="week-bar-val">${done ? '✓' : ''}</div>
-        <div class="week-bar-track"><div class="week-bar-fill ${done ? '' : 'empty'}" style="height:${done ? 100 : 2}%"></div></div>
+        <div class="week-bar-track"><div class="${fillCls}" style="${fillStyle}"></div></div>
         <div class="week-bar-label ${isToday ? 'today' : ''}">${DAYS_ID[d.getDay()].slice(0, 3)}</div>
       </div>`
     }).join('')
