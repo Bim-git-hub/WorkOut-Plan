@@ -18,6 +18,8 @@ let editing = false
 let justMarked: string | null = null
 let flip = ''
 let currentView: ViewName = 'dashboard'
+let modalTrigger: HTMLElement | null = null
+let noteEnter = false
 
 type Theme = 'paper' | 'ink'
 const THEME_KEY = 'workout-log-theme'
@@ -56,21 +58,53 @@ async function reloadState() {
 
 function openDayModal() {
   const modal = document.getElementById('dayModal')
-  if (modal) {
-    modal.hidden = false
-    const focusTarget = modal.querySelector<HTMLElement>('#dayModalClose')
-    focusTarget?.focus()
+  if (!modal) return
+  const active = document.activeElement as HTMLElement | null
+  if (active && !modal.contains(active)) modalTrigger = active
+  modal.classList.remove('closing')
+  modal.hidden = false
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
+  if (!reduced) {
+    modal.style.animation = 'none'
+    const panel = modal.querySelector<HTMLElement>('.modal')
+    if (panel) panel.style.animation = 'none'
+    void modal.offsetWidth
+    modal.style.animation = ''
+    if (panel) panel.style.animation = ''
   }
+  modal.querySelector<HTMLElement>('#dayModalClose')?.focus()
 }
+
 async function closeDayModal() {
   const modal = document.getElementById('dayModal')
-  if (modal) modal.hidden = true
+  if (!modal || modal.hidden || modal.classList.contains('closing')) return
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
+  if (reduced) {
+    modal.hidden = true
+  } else {
+    modal.classList.add('closing')
+    await new Promise<void>((resolve) => {
+      modal.addEventListener('animationend', (e) => { if (e.target === modal) resolve() }, { once: true })
+    })
+    modal.classList.remove('closing')
+    modal.hidden = true
+  }
+  const trigger = modalTrigger
+  const triggerDate = selected
+  modalTrigger = null
   if (editing) {
     await reloadState()
     editing = false
     renderAll()
   } else {
     editing = false
+  }
+  if (trigger?.isConnected) trigger.focus()
+  else {
+    const cell = document.querySelector<HTMLElement>(`.day[data-d="${triggerDate}"]`)
+    cell?.focus()
   }
 }
 
@@ -199,7 +233,7 @@ function renderCalendarView(enter = false) {
     justMarked,
     flip,
     enter: anim,
-    onSelectDate: (dateStr) => { selected = dateStr; editing = false; renderAll(); openDayModal() }
+    onSelectDate: (dateStr) => { selected = dateStr; editing = false; noteEnter = true; renderAll(); openDayModal() }
   })
   flip = ''
 
@@ -214,8 +248,10 @@ function renderCalendarView(enter = false) {
     renderNote: () => renderNote(noteCtx),
     reloadState
   }
-  renderNote(noteCtx)
-  renderStats(state, viewDate)
+  const nEnter = anim || noteEnter
+  noteEnter = false
+  renderNote(noteCtx, { enter: nEnter })
+  renderStats(state, viewDate, { enter: anim })
 }
 
 function renderCurrentView(enter = false) {
@@ -241,7 +277,14 @@ async function init() {
 
   document.getElementById('themeToggle')?.addEventListener('click', () => {
     const current = document.documentElement.getAttribute('data-theme')
-    applyTheme(current === 'ink' ? 'paper' : 'ink')
+    const next: Theme = current === 'ink' ? 'paper' : 'ink'
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      || document.documentElement.getAttribute('data-motion') === 'off'
+    if (!reduced && 'startViewTransition' in document) {
+      (document as any).startViewTransition(() => applyTheme(next))
+    } else {
+      applyTheme(next)
+    }
   })
 
   document.querySelectorAll<HTMLElement>('.tabs [data-view]').forEach((btn) => {

@@ -64,6 +64,7 @@ export function renderCalendar(ctx: CalendarCtx): void {
     if (s === todayStr) cls.push('today')
     if (s === selected) cls.push('selected')
     if (state.done[s]) cls.push('done')
+    if (justMarked === s && state.done[s]) cls.push('just-done')
     const idx = lead + d - 1
     const row = Math.floor(idx / 7)
     const col = idx % 7

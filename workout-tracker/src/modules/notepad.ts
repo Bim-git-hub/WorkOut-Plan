@@ -3,6 +3,11 @@ import { parse, pad, fmt } from '../lib/dates'
 import { esc } from '../lib/utils'
 import type { WorkoutState, Exercise } from '../lib/types'
 
+function reducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-motion') === 'off'
+}
+
 export interface NotepadCtx {
   state: WorkoutState
   selected: string
@@ -11,11 +16,12 @@ export interface NotepadCtx {
   setJustMarked: (v: string | null) => void
   save: () => Promise<void> | void
   render: () => void
-  renderNote: () => void
+  renderNote: (opts?: { enter?: boolean }) => void
   reloadState: () => Promise<void>
 }
 
-export function renderNote(ctx: NotepadCtx): void {
+export function renderNote(ctx: NotepadCtx, opts?: { enter?: boolean }): void {
+  const enter = !!opts?.enter
   const { state, selected } = ctx
   const date = parse(selected)
   const wd = date.getDay()
@@ -78,14 +84,21 @@ export function renderNote(ctx: NotepadCtx): void {
   body.innerHTML = `<div class="top"><span>${isToday ? 'Hari ini' : 'Terpilih'}</span><span class="${isDone ? 'ok' : ''}">${isDone ? '[ Selesai ]' : '[ Belum ]'}</span></div>
     <div class="bigdate"><b>${date.getDate()}</b><div><em>${DAYS_ID[wd]}</em><span>${MONTHS_ID[date.getMonth()]} ${date.getFullYear()}</span></div></div>
     ${label ? `<div class="schedule-title" style="margin-top:12px">${esc(label)}</div>` : ''}
-    ${list.length ? `<ul class="ex">${list.map((e, i) => `<li><span class="no">${pad(i + 1)}</span><span class="t">${esc(e.n)}</span><span class="lead"></span><span class="d">${esc(e.d)}</span></li>`).join('')}</ul>` : `<div class="restmsg">Hari istirahat.</div>`}
+    ${list.length ? `<ul class="ex">${list.map((e, i) => {
+      const anim = enter && !reducedMotion()
+      const liCls = anim ? ' class="row-enter"' : ''
+      const liStyle = anim ? ` style="--row-delay:${i * 45}ms"` : ''
+      const leadCls = anim ? ' class="lead lead-draw"' : ' class="lead"'
+      return `<li${liCls}${liStyle}><span class="no">${pad(i + 1)}</span><span class="t">${esc(e.n)}</span><span${leadCls}></span><span class="d">${esc(e.d)}</span></li>`
+    }).join('')}</ul>` : `<div class="restmsg">Hari istirahat.</div>`}
     <button class="cta ${isDone ? 'on' : ''}" id="toggleDone">${isDone ? 'Selesai — klik untuk batalkan' : 'Tandai selesai'}</button>
     <span class="cap">Catatan</span>
     <textarea id="noteText" placeholder="Beban, rasa badan, rekor baru...">${esc(state.notes[selected] || '')}</textarea>
     <div class="row"><button class="tbtn" id="editSched">Edit jadwal ${DAYS_ID[wd]}</button></div>`
 
   body.querySelector('#toggleDone')!.addEventListener('click', async () => {
-    if (state.done[selected]) {
+    const wasDone = !!state.done[selected]
+    if (wasDone) {
       delete state.done[selected]
       ctx.setJustMarked(null)
     } else {
@@ -93,6 +106,15 @@ export function renderNote(ctx: NotepadCtx): void {
       ctx.setJustMarked(selected)
     }
     await ctx.save()
+    if (wasDone) {
+      const xm = document.querySelector(`.day[data-d="${selected}"] .xm`) as HTMLElement | null
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        || document.documentElement.getAttribute('data-motion') === 'off'
+      if (xm && !reduced) {
+        xm.classList.add('xm-out')
+        await new Promise<void>((resolve) => xm.addEventListener('animationend', () => resolve(), { once: true }))
+      }
+    }
     ctx.render()
     ctx.setJustMarked(null)
   })
