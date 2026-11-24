@@ -252,7 +252,29 @@ function renderCalendarView(enter = false) {
     justMarked,
     flip,
     enter: anim,
-    onSelectDate: (dateStr) => { selected = dateStr; editing = false; noteEnter = true; renderAll(); openDayModal() }
+    onSelectDate: (dateStr) => { selected = dateStr; editing = false; noteEnter = true; renderAll(); openDayModal() },
+    onToggleDone: async (dateStr) => {
+      const wasDone = !!state.done[dateStr]
+      if (wasDone) {
+        delete state.done[dateStr]
+        setJustMarked(null)
+      } else {
+        state.done[dateStr] = true
+        setJustMarked(dateStr)
+      }
+      await persist()
+      if (wasDone) {
+        const xm = document.querySelector(`.day[data-d="${dateStr}"] .xm`) as HTMLElement | null
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          || document.documentElement.getAttribute('data-motion') === 'off'
+        if (xm && !reduced) {
+          xm.classList.add('xm-out')
+          await new Promise<void>((resolve) => xm.addEventListener('animationend', () => resolve(), { once: true }))
+        }
+      }
+      renderAll()
+      setJustMarked(null)
+    }
   })
   flip = ''
 

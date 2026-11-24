@@ -12,6 +12,7 @@ export interface CalendarCtx {
   flip: string
   enter?: boolean
   onSelectDate: (dateStr: string) => void
+  onToggleDone: (dateStr: string) => void
 }
 
 function reducedMotion(): boolean {
@@ -83,6 +84,10 @@ export function renderCalendar(ctx: CalendarCtx): void {
     n.onclick = pick
     n.onkeydown = (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick() }
+    }
+    n.oncontextmenu = (e) => {
+      e.preventDefault()
+      ctx.onToggleDone(n.dataset.d!)
     }
   })
 
